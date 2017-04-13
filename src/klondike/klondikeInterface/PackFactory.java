@@ -25,15 +25,11 @@ public abstract class PackFactory {
 	 * and of specific suit. Only the card with the value one more may
 	 * be pushed on top, the starting card is the Ace.
 	 * @param suit A color of all cards in the pack.
+	 * @param str A string to load pack from. If null, an empty pack
+	 * is created.
 	 */
-	public abstract Pack createTargetPack(Card.Color suit);
+	public abstract Pack createTargetPack(Card.Color suit, String str);
 	
-	/**
-	 * Load a target pack of cards.
-	 * @param str A string to load pack from, not null.
-	 */
-	public abstract Pack createTargetPack(String str);
-
 	/**
 	 * A working pack of cards. Only the card with the value one less
 	 * and of different color (red/black) may be pushed on top, the

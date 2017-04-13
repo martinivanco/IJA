@@ -14,7 +14,7 @@ public class KlondikeBoard {
 		PackFactory factory = new KlondikePackFactory();
 		
 		Pack pack1 = factory.createDeck("C1UC2UC3U");
-		Pack pack2 = factory.createSourcePack("H0DHJDHQD");
+		Pack pack2 = factory.createTargetPack(Card.Color.HEARTS, "H1DH2DH3D");
 		System.out.println("1:\t" + pack1);
 		System.out.println("2:\t" + pack2);
 		

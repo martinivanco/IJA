@@ -50,7 +50,7 @@ public class KlondikePack implements Pack {
 	}
 	
 	public Card pop() {
-		if(deck.size() == 0)
+		if(empty())
 			return null;
 			
 		Card card = get();
@@ -59,17 +59,32 @@ public class KlondikePack implements Pack {
 	}
 	
 	public boolean move(Pack source, Card card) {
+		// Check if source and destination are distinguish
+		if(this == source)
+			return false;
+			
+		// Get a copy of a card sequence
 		Stack<Card> stack = new Stack<>();
-		
-		// Stack the cards from the source
-		do
-			stack.push(source.pop());
-		while (stack.peek() != card);
+		int i = source.size()-1;
+		do {
+			stack.push(source.get(i--));
+		} while (stack.peek() != card);
 		
 		// Push all cards from the stack
-		while(!stack.empty())
-			if(!push(stack.pop()))
+		while(!stack.empty()) {
+			if(!push(stack.peek())) {
+				// Abort
+				while(stack.peek() != card) {
+					stack.push(pop());
+				}
 				return false;
+			}
+			stack.pop();
+		}
+		
+		// Move was succesful: remove the cards from source
+		Card c;
+		while((c = source.pop()) != card);
 		
 		// Success
 		return true;		
@@ -92,6 +107,14 @@ public class KlondikePack implements Pack {
 	// Auxiliary methods
 	
 	/**
+	 * Check if the pack is empty.
+	 * @return true if the pack is empty.
+	 */
+	protected boolean empty() {
+		return deck.size() == 0;
+	}
+	
+	/**
 	 * Read the card from the top.
 	 */
 	protected Card get() {
@@ -99,17 +122,15 @@ public class KlondikePack implements Pack {
 	}
 	
 	/**
-	 * Create a pack from its string representation.
+	 * Rebuild a pack from its string representation.
 	 */
-	protected static Pack fromString(String str) {
-		Pack pack = new KlondikePack(); // output pack
+	protected void fromString(String str) {
+		deck.clear();
 		
 		Card card;
 		while((card = KlondikeCard.fromString(str)) != null) {
-			pack.push(card);
+			push(card);
 			str = str.substring(3, str.length());
 		}
-		
-		return pack;
 	}
 }
