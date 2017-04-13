@@ -26,7 +26,7 @@ public interface PackFactory {
 	public Pack createTargetPack(Card.Color suit);
 
 	/**
-	 * A working pack of cards. Only the card with the value one more
+	 * A working pack of cards. Only the card with the value one less
 	 * and of different color (red/black) may be pushed on top, the
 	 * starting card is the King (any suit).
 	 */
