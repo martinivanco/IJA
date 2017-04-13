@@ -4,13 +4,13 @@ package klondike.klondikeInterface;
  * Single card interface.
  * 
  * String representation of such card is of the form 'SVF' where
- * - S is the suit ({@see Card.Color.toString()});
+ * - S is the suit (see {@see Card.Color.toString()});
  * - V is the value with '0','J','Q','K','A' representing 10, Jack,
  * Queen, King and Ace respectively;
  * - F is 'U' when the card is faced up, 'D' otherwise.
  *
- * @author Roman Andriushchenko (xandri03)
- * @author Martin Ivanco (xivanc03)
+ * @author xandri03
+ * @author xivanc03
  */
 public interface Card {
 	public static enum Color {
@@ -71,19 +71,12 @@ public interface Card {
 	public boolean isFacedUp();
    
 	/**
-	 * Flip the card to be faced up. If the card is already faced up,
-	 * no action performed.
+	 * Flip the card to be faced up.
 	 */
     public void flipUp();
 
 	/**
-	 * Flip the card to be faced down. If the card is already faced
-	 * down, no action performed.
+	 * Flip the card to be faced down.
 	 */
     public void flipDown();
-
-	/**
-	 * Rebuild the card using {@code str} as its text representation.
-	 */
-    public void fromString(String str);
 }
