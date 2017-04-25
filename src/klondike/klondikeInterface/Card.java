@@ -9,22 +9,27 @@ package klondike.klondikeInterface;
  * Queen, King and Ace respectively;
  * - F is 'U' when the card is faced up, 'D' otherwise.
  *
+ * Note: provides equal() and hashCode() override.
+ * 
  * @author xandri03
  * @author xivanc03
  */
 public interface Card {
+	/**
+	 * Card color enumerator.
+	 */
 	public static enum Color {
-		CLUBS ("C"), DIAMONDS ("D"), HEARTS ("H"), SPADES ("S");
+		CLUBS ('C'), DIAMONDS ('D'), HEARTS ('H'), SPADES ('S');
 	
 		/**
 		 * String representation of a color.
 		 */
-		private String symbol;
+		private char symbol;
 		
 		/**
 		 * Default constructor.
 		 */
-		Color(String symbol) {
+		Color(char symbol) {
 			this.symbol = symbol;
 		}
 		
@@ -44,7 +49,7 @@ public interface Card {
 		 */
 		@Override
 		public String toString() {
-			return symbol;
+			return Character.toString(symbol);
 		}
 	}
 
@@ -71,12 +76,8 @@ public interface Card {
 	public boolean isFacedUp();
    
 	/**
-	 * Flip the card to be faced up.
+	 * Change the card orientation.
+	 * @param facedUp true for the card to be faced up.
 	 */
-    public void flipUp();
-
-	/**
-	 * Flip the card to be faced down.
-	 */
-    public void flipDown();
+    public void flip(boolean facedUp);
 }

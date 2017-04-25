@@ -41,7 +41,7 @@ public class KlondikeBoard {
 		for (i = 0; i < 7; i++) {
 			workingPacks[i] = factory.createWorkingPack(null);
 			workingPacks[i].move(deck, deck.get(deck.size() - i - 1));
-			workingPacks[i].get(i).flipUp();
+			workingPacks[i].get(i).flip(true);
 		}
 
 		activeCard = null;
@@ -64,36 +64,35 @@ public class KlondikeBoard {
 	}
 
 	public void clickCard(Card clickedCard, Pack clickedPack) {
-
+		// Check if the deck was clicked
 		if (clickedPack == deck) {
-			sourcePack.push(deck.pop());
+			activeCard = null;
+			activePack = null;
+			
+			if(deck.size() != 0) {
+				// Move top card to the source pack
+				sourcePack.push(deck.pop());
+			}
+			else {
+				// Return cards from the source pack
+				while(sourcePack.size() != 0)
+					deck.push(sourcePack.pop());
+			}
+			
 			return;
 		}
 
+		// (regular) pack
 		if (activeCard == null) {
-			if ((clickedPack == sourcePack) && (clickedPack.get(clickedPack.size() - 1) != clickedCard))
-				return;
+			// Card selection
 			if (!clickedCard.isFacedUp())
 				return;
-
 			activeCard = clickedCard;
 			activePack = clickedPack;
 		}
 		else {
-			if (clickedPack == sourcePack)
-				return;
-			if ((clickedPack == activePack) && (clickedCard != activeCard))
-				return;
-
-			if (clickedCard != activeCard) {
-				if (clickedPack.move(activePack, activeCard)) {
-					if (activePack.size() > 0)
-						activePack.get(activePack.size() - 1).flipUp();
-				}
-				else
-					return;
-			}
-
+			// Card move
+			clickedPack.move(activePack, activeCard);
 			activeCard = null;
 			activePack = null;
 		}

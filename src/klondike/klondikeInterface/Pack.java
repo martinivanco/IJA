@@ -3,7 +3,7 @@ package klondike.klondikeInterface;
 /**
  * Card pack interface.
  * 
- * For a string representation, see {@see Card.toString()}.
+ * String representation is a sequence of {@see Card.toString()}.
  * 
  * @author xandri03
  * @author xivanc03
@@ -33,7 +33,8 @@ package klondike.klondikeInterface;
 	public Card pop();
 	
 	/**
-	 * Get all cards from {@code source} starting from {@code card}.
+	 * Get all cards from {@code source} starting from {@code card}. The
+	 * source must differ from destination.
 	 * @return true if the move was succesful.
 	 */
 	public boolean move(Pack source, Card card);

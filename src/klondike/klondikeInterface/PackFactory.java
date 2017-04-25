@@ -9,7 +9,7 @@ public abstract class PackFactory {
 	/**
 	 * Create a standard deck. All cards here are faced down.
 	 * @param str A string to load pack from. If null, a standard
-	 * deck of 52 different cards is created.
+	 * shuffled deck of 52 different cards is created.
 	 */
 	public abstract Pack createDeck(String str);
 

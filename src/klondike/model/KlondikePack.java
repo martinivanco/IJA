@@ -17,7 +17,7 @@ public class KlondikePack implements Pack {
 	// Attributes
 	
 	/**
-	 * List of cards.
+	 * A list of cards.
 	 */
 	private List<Card> deck;
 	
@@ -39,10 +39,7 @@ public class KlondikePack implements Pack {
 	}
 
 	public Card get(int index) {
-		if(index < 0 || index >= deck.size())
-			return null;
-		else
-			return deck.get(index);
+		return index >= 0 && index < size() ? deck.get(index) : null;
 	}
 	
 	public boolean push(Card card) {
@@ -50,12 +47,7 @@ public class KlondikePack implements Pack {
 	}
 	
 	public Card pop() {
-		if(empty())
-			return null;
-			
-		Card card = get();
-		deck.remove(card);
-		return card;
+		return empty() ? null : deck.remove(size()-1);
 	}
 	
 	public boolean move(Pack source, Card card) {
@@ -63,28 +55,23 @@ public class KlondikePack implements Pack {
 		if(this == source)
 			return false;
 			
-		// Get a copy of a card sequence
-		Stack<Card> stack = new Stack<>();
-		int i = source.size()-1;
-		do {
-			stack.push(source.get(i--));
-		} while (stack.peek() != card);
-		
+		// Find the index of a card in a source pack
+		int i;
+		for(i = 0; source.get(i) != card; i++);
+
 		// Push all cards from the stack
-		while(!stack.empty()) {
-			if(!push(stack.peek())) {
-				// Abort
-				while(stack.peek() != card) {
-					stack.push(pop());
-				}
+		int initSize = size();	// initial destination size
+		while(i != source.size()) {
+			if(!push(source.get(i++))) {
+				// Abort: restore initial size
+				while(size() != initSize)
+					pop();
 				return false;
 			}
-			stack.pop();
 		}
 		
-		// Move was succesful: remove the cards from source
-		Card c;
-		while((c = source.pop()) != card);
+		// Move was succesful: remove the cards from the source
+		while(source.pop() != card);
 		
 		// Success
 		return true;		
@@ -95,12 +82,12 @@ public class KlondikePack implements Pack {
 	 */
 	@Override
 	public String toString() {
-		String str = "";
+		StringBuffer buf = new StringBuffer();
 		
 		for(Card card: deck)
-			str += card;
+			buf.append(card);
 		
-		return str;
+		return buf.toString();
 	}
 	
 	//******************************************************************
@@ -118,7 +105,7 @@ public class KlondikePack implements Pack {
 	 * Read the card from the top.
 	 */
 	protected Card get() {
-		return get(deck.size()-1);
+		return get(size()-1);
 	}
 	
 	/**

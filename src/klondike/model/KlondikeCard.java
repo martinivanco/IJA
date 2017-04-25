@@ -21,9 +21,8 @@ public class KlondikeCard implements Card {
 	 */
 	private int value;
 	
-	
 	/**
-	 * Card orientation, true if the front is up.
+	 * Card orientation, true when the front is up.
 	 */
 	private boolean facedUp;
 	
@@ -31,9 +30,9 @@ public class KlondikeCard implements Card {
 	// Constructors
 	
 	/**
-	 * Card constructor.
+	 * Card constructor. The card is faced down.
 	 * @param color Card color.
-	 * @param value Card value, one of <1,13>.
+	 * @param value Card value, one of <1,13> (1 implicitly).
 	 */
 	public KlondikeCard(Card.Color color, int value) {
 		this(color, value, false);
@@ -42,14 +41,12 @@ public class KlondikeCard implements Card {
 	/**
 	 * Card constructor.
 	 * @param color Card color.
-	 * @param value Card value, one of <1,13>.
+	 * @param value Card value, one of <1,13> (1 implicitly).
 	 * @param facedUp Card orientation.
 	 */
     public KlondikeCard(Card.Color color, int value, boolean facedUp) {
 		this.color = color;
-		if(value < 1 || value > 13)
-			value = 1;
-		this.value = value;
+		this.value = value >= 1 && value <= 13 ? value : 1;
 		this.facedUp = facedUp;
 	}
 	
@@ -72,12 +69,8 @@ public class KlondikeCard implements Card {
 		return facedUp;
 	}
 	
-	public void flipUp() {
-		facedUp = true;
-	}
-	
-	public void flipDown() {
-		facedUp = false;
+	public void flip(boolean facedUp) {
+		this.facedUp = facedUp;
 	}
 	
 	/**
@@ -85,29 +78,26 @@ public class KlondikeCard implements Card {
 	 */
 	@Override
 	public String toString() {
-		String str;
+		StringBuffer buf = new StringBuffer(0);
 		
 		// Extract suit
-		str = color.toString();
+		buf.append(color);
 		
 		// Extract value
 		switch(value) {
-			case 1:		str += "A"; break;
-			case 10:	str += "0"; break;
-			case 11:	str += "J"; break;
-			case 12:	str += "Q"; break;
-			case 13:	str += "K"; break;
-			default:	str += "" + value; break;
+			case 1:		buf.append('A'); break;
+			case 10:	buf.append('0'); break;
+			case 11:	buf.append('J'); break;
+			case 12:	buf.append('Q'); break;
+			case 13:	buf.append('K'); break;
+			default:	buf.append(value); break;
 		}
 		
 		// Extract orientation
-		if(facedUp)
-			str += 'U';
-		else
-			str += 'D';
-		
+		buf.append(facedUp ? 'U' : 'D');
+
 		// Success
-		return str;
+		return buf.toString();
 	}
 
 	/**
@@ -126,8 +116,8 @@ public class KlondikeCard implements Card {
 	 * hashCode() override.
 	 */
 	public int hashCode() {
-		// Use the suit
-		return color.hashCode();
+		// Use card value
+		return value;
 	}
 	
 	//******************************************************************
@@ -165,10 +155,7 @@ public class KlondikeCard implements Card {
 		}
 		
 		// Extract orientation
-		if(str.charAt(2) == 'U')
-			facedUp = true;
-		else
-			facedUp = false;
+		facedUp = str.charAt(2) == 'U';
 		
 		// Create and return a new card
 		return new KlondikeCard(color, value, facedUp);

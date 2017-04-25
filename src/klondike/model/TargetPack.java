@@ -13,7 +13,7 @@ public class TargetPack extends KlondikePack {
 	/**
 	 * Pack suit.
 	 */
-	Card.Color color;
+	private Card.Color color;
 	
 	/**
 	 * Default constructor.
@@ -33,9 +33,8 @@ public class TargetPack extends KlondikePack {
 		
 		// Check the value
 		if(empty()) {
-			if(card.value() != 1) {
+			if(card.value() != 1)
 				return false;
-			}
 		}
 		else if(get().value()+1 != card.value()) {
 			return false;

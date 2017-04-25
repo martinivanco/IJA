@@ -14,7 +14,7 @@ public class KlondikePackFactory extends PackFactory {
 	// Abstract methods
 	
 	public Pack createDeck(String str) {
-		KlondikePack pack = new Deck();
+		Deck pack = new Deck();
 		
 		if(str != null) {
 			// Load from string
@@ -25,6 +25,9 @@ public class KlondikePackFactory extends PackFactory {
 			for(Card.Color color: Card.Color.values())
 				for(int value = 1; value <= 13; value++)
 					pack.push(new KlondikeCard(color, value));
+			
+			// Shuffle the deck
+			pack.shuffle();
 		}
 		
 		// Success
@@ -50,8 +53,7 @@ public class KlondikePackFactory extends PackFactory {
 	}
 	
 	public Pack createWorkingPack(String str) {
-		// TODO
-		KlondikePack pack = new Deck();
+		KlondikePack pack = new WorkingPack();
 		
 		if(str != null)
 			pack.fromString(str);
