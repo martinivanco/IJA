@@ -11,6 +11,7 @@ import java.io.*;
  */
 public class KlondikeBoard {
 
+	private String board_id;
 	private PackFactory factory;
 	private Pack deck;
 	private Pack sourcePack;
@@ -23,7 +24,9 @@ public class KlondikeBoard {
 	 * Constructor.
 	 * @param load the name of the save file to load from. If null, a new game is created.
 	 */
-	public KlondikeBoard(String load) {
+	public KlondikeBoard(String id, String load) {
+		board_id = id;
+
 		if (load == null)
 			newGame();
 		else
@@ -35,6 +38,16 @@ public class KlondikeBoard {
 	 * All packs are initialized appropriately.
 	 */
 	public void newGame() {
+		// Clear autosave file
+		try {
+			FileWriter writer = new FileWriter(new File("game" + File.separator + board_id + ".asv"));
+			writer.write("");
+			writer.close();
+		}
+		catch (Exception e) {
+			// If file is not found, no worries
+		}
+
 		// Create factory, deck and source pack
 		factory = new KlondikePackFactory();
 		deck = factory.createDeck(null);
@@ -52,10 +65,7 @@ public class KlondikeBoard {
 		workingPacks = new Pack[7];
 		for (i = 0; i < 7; i++) {
 			workingPacks[i] = factory.createWorkingPack(null);
-			Card tmp = deck.get(deck.size() - i - 1);
-			if (tmp == null)
-				System.out.println("Shit");
-			workingPacks[i].move(deck, tmp);
+			workingPacks[i].move(deck, deck.get(deck.size() - i - 1));
 			workingPacks[i].get(i).flip(true);
 		}
 
@@ -88,20 +98,12 @@ public class KlondikeBoard {
 		}
 
 		// Write to file
-		FileWriter fw;
+		FileWriter writer;
+		String saveStr = boardToString();
 		try {
-			fw = new FileWriter(file);
-		}
-		catch (IOException e) {
-			// TODO -> GUI MESSAGE
-			e.printStackTrace();
-			return;
-		}
-
-		String saveStr = makePackString();
-		try {
-			fw.write(saveStr);
-			fw.close();
+			writer = new FileWriter(file);
+			writer.write(saveStr);
+			writer.close();
 		}
 		catch (IOException e) {
 			// TODO -> GUI MESSAGE
@@ -122,39 +124,19 @@ public class KlondikeBoard {
 			return;
 		}
 
-		// Create readers
-		FileReader fr;
-		BufferedReader br;
-		try {
-			fr = new FileReader(file);
-			br = new BufferedReader(fr);
-		}
-		catch (IOException e) {
-			// TODO -> GUI MESSAGE
-			e.printStackTrace();
-			return;
-		}
-
 		// Create packs from file
+		FileReader reader;
+		StringBuilder str = new StringBuilder();
 		factory = new KlondikePackFactory();
 		try {
-			// Create deck and source pack
-			deck = factory.createDeck(br.readLine());
-			sourcePack = factory.createSourcePack(br.readLine());
+			// Get file to string
+			reader = new FileReader(file);
+			int c = 0;
+			while ((c = reader.read()) != -1) str.append(c);
 
-			// Create target packs of each color
-			targetPacks = new Pack[4];
-			int i = 0;
-			for (Card.Color color: Card.Color.values()) {
-				targetPacks[i] = factory.createTargetPack(color, br.readLine());
-				i += 1;
-			}
-
-			// Create 7 working packs and deal cards to them from deck
-			workingPacks = new Pack[7];
-			for (i = 0; i < 7; i++) {
-				workingPacks[i] = factory.createWorkingPack(br.readLine());
-			}
+			// Load packs
+			boardFromString(str.toString());
+			reader.close();
 
 			// Set activity to null
 			activeCard = null;
@@ -167,12 +149,121 @@ public class KlondikeBoard {
 	}
 
 	/**
+	 * Auto save function for undo.
+	 * All packs are saved to autosave file. Only last 10 configurations are kept.
+	 */
+	protected void autoSave() {
+		// Check game folder
+		File folder = new File("game");
+		if (!folder.exists()) {
+			if (!folder.mkdir())
+				// TODO -> GUI MESSAGE
+				return;
+		}
+
+		// Needed variables
+		File file = new File("game" + File.separator + board_id + ".asv");
+		BufferedReader reader;
+		String ls = System.getProperty("line.separator");
+		String line;
+		StringBuilder whole = new StringBuilder();
+		int i = 0;
+		FileWriter writer;
+
+		try {
+			// Get file and reader
+			if (!file.exists()) {
+				if (!file.createNewFile())
+					// TODO -> GUI MESSAGE
+					return;
+			}
+			reader = new BufferedReader(new FileReader(file));
+
+			// Build the content
+			while((i < 9 * 13) && ((line = reader.readLine()) != null)) {
+				whole.append(line);
+				whole.append(ls);
+				i += 1;
+			}
+			whole.insert(0, boardToString());
+			reader.close();
+
+			// Write to file
+			writer = new FileWriter(file);
+			writer.write(whole.toString());
+			writer.close();
+		}
+		catch (IOException e) {
+			// TODO -> GUI MESSAGE
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Undo last move.
+	 * Maximum of 10 undo moves are available.
+	 */
+	public void undo() {
+		File file = new File("game" + File.separator + board_id + ".asv");
+		BufferedReader reader;
+		String ls = System.getProperty("line.separator");
+		String line;
+		StringBuilder str = new StringBuilder();
+		FileWriter writer;
+		int i = 0;
+
+		try {
+			// Get file and reader
+			if (!file.exists()) {
+				// TODO -> GUI MESSAGE
+				System.out.println("Can't undo.");
+				return;
+			}
+			reader = new BufferedReader(new FileReader(file));
+
+			// Get last state
+			while((i < 13) && ((line = reader.readLine()) != null)) {
+				str.append(line);
+				str.append(ls);
+				i += 1;
+			}
+
+			// Load it
+			if (str.toString().equals("")) {
+				// TODO -> GUI MESSAGE
+				System.out.println("Can't undo.");
+				return;
+			}
+			boardFromString(str.toString());
+
+			// Get the rest of the file
+			str.setLength(0);
+			while((line = reader.readLine()) != null) {
+				str.append(line);
+				str.append(ls);
+			}
+			reader.close();
+
+			// Rewrite to file
+			writer = new FileWriter(file);
+			writer.write(str.toString());
+			writer.close();
+		}
+		catch (IOException e) {
+			// TODO -> GUI MESSAGE
+			System.out.println("Can't undo.");
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Click card.
 	 * All necessary actions are carried out.
 	 */
 	public void clickCard(Card clickedCard, Pack clickedPack) {
 		// If the deck was clicked
 		if (clickedPack == deck) {
+			autoSave();
 			// Reset activity
 			activeCard = null;
 			activePack = null;
@@ -203,6 +294,7 @@ public class KlondikeBoard {
 			activePack = clickedPack;
 		}
 		else {
+			autoSave();
 			// Card move
 			clickedPack.move(activePack, activeCard);
 
@@ -212,21 +304,58 @@ public class KlondikeBoard {
 	}
 
 	/**
-	 * Make a string containing all the packs of game.
+	 * Create string representing board configuration.
 	 * Each pack is on new line.
+	 * @return string representing all packs on board
 	 */
-	private String makePackString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append(deck); buf.append("\n");
-		buf.append(sourcePack); buf.append("\n");
+	private String boardToString() {
+		StringBuilder buf = new StringBuilder();
+		String ls = System.getProperty("line.separator");
+
+		buf.append(deck); buf.append(ls);
+		buf.append(sourcePack); buf.append(ls);
 		for (int i = 0; i < 4; i++) {
-			buf.append(targetPacks[i]); buf.append("\n");
+			buf.append(targetPacks[i]); buf.append(ls);
 		}
 		for (int i = 0; i < 7; i++) {
-			buf.append(workingPacks[i]); buf.append("\n");
+			buf.append(workingPacks[i]); buf.append(ls);
 		}
 
 		return buf.toString();
+	}
+
+	/**
+	 * Load board configuration from string.
+	 * Ech pack is filled accordingly.
+	 * @param string a string representing all packs on board
+	 */
+	private void boardFromString(String string) {
+		// Make reader
+		BufferedReader reader = new BufferedReader(new StringReader(string));
+
+		try {
+			// Load deck and source pack
+			deck = factory.createDeck(reader.readLine());
+			sourcePack = factory.createSourcePack(reader.readLine());
+
+			// Load target packs
+			targetPacks = new Pack[4];
+			int i = 0;
+			for (Card.Color color: Card.Color.values()) {
+				targetPacks[i] = factory.createTargetPack(color, reader.readLine());
+				i += 1;
+			}
+
+			// Load working packs
+			workingPacks = new Pack[7];
+			for (i = 0; i < 7; i++) {
+				workingPacks[i] = factory.createWorkingPack(reader.readLine());
+			}
+		}
+		catch (IOException e) {
+			// TODO -> GUI MESSAGE
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -264,6 +393,7 @@ public class KlondikeBoard {
 	 *     SVname saves the game - replace "name" with the desired filename without extension
 	 *     LDname loads the game - as with save
 	 *     NG makes new game
+	 *     U undos last move
 	 *     Q quits this function - other chars are ignored.
 	 */
 	public void textCommand() {
@@ -303,6 +433,9 @@ public class KlondikeBoard {
 					break;
 				case 'N':
 					newGame();
+					break;
+				case 'U':
+					undo();
 					break;
 				case 'Q':
 					return;
