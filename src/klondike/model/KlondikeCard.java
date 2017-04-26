@@ -58,7 +58,7 @@ public class KlondikeCard implements Card {
 	}
 	
 	public boolean similarColorTo(Card c) {
-		return color.similarColorTo(c.color());
+		return c.isFacedUp() && color.similarColorTo(c.color());
 	}
 	
 	public int value() {
