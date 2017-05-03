@@ -22,8 +22,9 @@ public class GraphicBoard {
 	/**
 	 * Constructor.
 	 * @param id the id of the board used for autosave
+	 * @param load the name of the save file to load from. If null, a new board is created.
 	 */
-	public GraphicBoard(String id) {
+	public GraphicBoard(String id, String load) {
 		// Set up pane
         pane = new JLayeredPane();
         pane.setPreferredSize(new Dimension(600, 600));
@@ -31,7 +32,7 @@ public class GraphicBoard {
 
         setBackground();
 
-        board = new KlondikeBoard(id, null);
+        board = new KlondikeBoard(id, load);
 
         addPacks();
     }
@@ -100,5 +101,38 @@ public class GraphicBoard {
     		board.clickCard(card.card, pack.pack);
 
     	redrawPacks();
+	}
+
+	/**
+	 * Save the game.
+	 */
+	public void save() {
+		// Get the file name from user
+		String name = (String) JOptionPane.showInputDialog(pane, "Name:", "Save game", JOptionPane.QUESTION_MESSAGE, null, null, "board1");
+
+		// Check if file exists
+		if (board.saveFileExists(name)) {
+			Object[] options = {"Yes", "No"};
+			int ok = JOptionPane.showOptionDialog(pane, "There is already a save file named \"" + name + "\".\nDo you want to overwrite it?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+			if (ok == JOptionPane.NO_OPTION)
+				return;
+		}
+
+		board.saveGame(name);
+	}
+
+	/**
+	 * Undo last move.
+	 */
+	public void undo() {
+		board.undo();
+		redrawPacks();
+	}
+
+	/**
+	 * Show a hint of possible moves.
+	 */
+	public void hint() {
+		//TODO
 	}
 }

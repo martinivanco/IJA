@@ -76,6 +76,15 @@ public class KlondikeBoard {
 	}
 
 	/**
+	 * Check if save file exists.
+	 * @param name name of the save file without extension
+	 * @return true if file exists, false if it does not
+	 */
+	public boolean saveFileExists(String name) {
+		return (new File("saved" + File.separator + name + ".sv")).exists();
+	}
+
+	/**
 	 * Save current game.
 	 * The game is saved in a text form.
 	 * @param name filename of the saved game. The file will be: saved/{name}.sv
@@ -84,21 +93,11 @@ public class KlondikeBoard {
 		// Check saved folder
 		File folder = new File("saved");
 		if (!folder.exists()) {
-			if (!folder.mkdir())
-				// TODO -> GUI MESSAGE
-				return;
-		}
-
-		// Check if user is okay with overwriting if file already exists.
-		File file = new File("saved" + File.separator + name + ".sv");
-		if (file.exists()) {
-			// TODO -> GUI MESSAGE
-			System.out.println("Do you want to overwrite save? (yes/no)");
-			if (!getUserInput().equals("yes"))
-				return;
+			folder.mkdir();
 		}
 
 		// Write to file
+		File file = new File("saved" + File.separator + name + ".sv");
 		FileWriter writer;
 		String saveStr = boardToString();
 		try {
@@ -117,15 +116,8 @@ public class KlondikeBoard {
 	 * All packs are initialized appropriately.
 	 */
 	public void loadGame(String name) {
-		// Check if file exists
-		File file = new File("saved" + File.separator + name + ".sv");
-		if (!file.exists()) {
-			// TODO -> GUI MESSAGE
-			System.out.println("The save file does not exist.");
-			return;
-		}
-
 		// Create packs from file
+		File file = new File("saved" + File.separator + name + ".sv");
 		FileReader reader;
 		StringBuilder str = new StringBuilder();
 		factory = new KlondikePackFactory();
@@ -133,7 +125,7 @@ public class KlondikeBoard {
 			// Get file to string
 			reader = new FileReader(file);
 			int c = 0;
-			while ((c = reader.read()) != -1) str.append(c);
+			while ((c = reader.read()) != -1) str.append((char) c);
 
 			// Load packs
 			boardFromString(str.toString());
@@ -157,9 +149,7 @@ public class KlondikeBoard {
 		// Check game folder
 		File folder = new File("game");
 		if (!folder.exists()) {
-			if (!folder.mkdir())
-				// TODO -> GUI MESSAGE
-				return;
+			folder.mkdir();
 		}
 
 		// Needed variables
@@ -174,9 +164,7 @@ public class KlondikeBoard {
 		try {
 			// Get file and reader
 			if (!file.exists()) {
-				if (!file.createNewFile())
-					// TODO -> GUI MESSAGE
-					return;
+				file.createNewFile();
 			}
 			reader = new BufferedReader(new FileReader(file));
 
@@ -216,8 +204,6 @@ public class KlondikeBoard {
 		try {
 			// Get file and reader
 			if (!file.exists()) {
-				// TODO -> GUI MESSAGE
-				System.out.println("Can't undo.");
 				return;
 			}
 			reader = new BufferedReader(new FileReader(file));
@@ -231,8 +217,6 @@ public class KlondikeBoard {
 
 			// Load it
 			if (str.toString().equals("")) {
-				// TODO -> GUI MESSAGE
-				System.out.println("Can't undo.");
 				return;
 			}
 			boardFromString(str.toString());
@@ -252,7 +236,6 @@ public class KlondikeBoard {
 		}
 		catch (IOException e) {
 			// TODO -> GUI MESSAGE
-			System.out.println("Can't undo.");
 			e.printStackTrace();
 		}
 	}
