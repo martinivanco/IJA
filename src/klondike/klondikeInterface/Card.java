@@ -19,7 +19,7 @@ public interface Card {
 	 * Card color enumerator.
 	 */
 	public static enum Color {
-		CLUBS ('C'), DIAMONDS ('D'), HEARTS ('H'), SPADES ('S');
+		SPADES ('S'), DIAMONDS ('D'), CLUBS ('C'), HEARTS ('H');
 	
 		/**
 		 * String representation of a color.

@@ -7,21 +7,22 @@ import java.io.*;
 
 /**
  * Klondike board.
+ * Implements main logic and rules of the game.
  * @author xivanc03
  */
 public class KlondikeBoard {
-
 	private String board_id;
 	private PackFactory factory;
-	private Pack deck;
-	private Pack sourcePack;
-	private Pack[] targetPacks;
-	private Pack[] workingPacks;
+	public Pack deck;
+	public Pack sourcePack;
+	public Pack[] targetPacks;
+	public Pack[] workingPacks;
 	private Card activeCard;
 	private Pack activePack;
 
 	/**
 	 * Constructor.
+	 * @param id the id of the board used for autosave
 	 * @param load the name of the save file to load from. If null, a new game is created.
 	 */
 	public KlondikeBoard(String id, String load) {
@@ -283,6 +284,9 @@ public class KlondikeBoard {
 
 		// Regular pack
 		if (activeCard == null) {
+			// If an empty pack was clicked, it will not get selected
+			if (clickedCard == null)
+				return;
 			// Card selection
 			if (!clickedCard.isFacedUp())
 				return;
