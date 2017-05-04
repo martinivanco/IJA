@@ -49,6 +49,25 @@ public class GraphicBoard {
         pane.add(background, new Integer(0));
     }
 
+    private void setActive() {
+		int i;
+		switch (board.getActivePack().charAt(0)) {
+			case 'S':
+				source.setActive(0);
+				break;
+			case 'T':
+				i = Character.getNumericValue(board.getActivePack().charAt(1));
+				targetPacks[i].setActive(targetPacks[i].pack.size() - board.getActiveCard() - 1);
+				break;
+			case 'W':
+				i = Character.getNumericValue(board.getActivePack().charAt(1));
+				workingPacks[i].setActive(workingPacks[i].pack.size() - board.getActiveCard() - 1);
+				break;
+			default:
+				break;
+		}
+	}
+
 	/**
 	 * Add packs to the board pane.
 	 */
@@ -74,6 +93,8 @@ public class GraphicBoard {
 			workingPacks[i] = new GraphicPack(this, board.workingPacks[i], 30 + 78*i, 170, false);
 			pane.add(workingPacks[i].pane, new Integer(1));
 		}
+
+		setActive();
 	}
 
 	/**

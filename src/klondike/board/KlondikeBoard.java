@@ -290,6 +290,30 @@ public class KlondikeBoard {
 		}
 	}
 
+	public String getActivePack() {
+		if (activePack == sourcePack) {
+			return "S";
+		}
+		for (int i = 0; i < 4; i++) {
+			if (activePack == targetPacks[i])
+				return "T" + i;
+		}
+		for (int i = 0; i < 7; i++) {
+			if (activePack == workingPacks[i])
+				return "W" + i;
+		}
+		return "null";
+	}
+
+	public int getActiveCard() {
+		for (int i = 0; i < activePack.size(); i++) {
+			if (activePack.get(i) == activeCard) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * Create string representing board configuration.
 	 * Each pack is on new line.

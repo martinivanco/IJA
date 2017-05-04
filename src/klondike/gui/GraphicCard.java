@@ -42,13 +42,6 @@ public class GraphicCard implements MouseListener {
     }
 
 	/**
-	 * Draw yellow border around card.
-	 */
-	public void setActive() {
-    	label.setBorder(BorderFactory.createLineBorder(Color.yellow));
-	}
-
-	/**
 	 * Handle click on this card.
 	 */
 	@Override

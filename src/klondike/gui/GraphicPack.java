@@ -3,6 +3,7 @@ package klondike.gui;
 import klondike.klondikeInterface.Pack;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -46,6 +47,11 @@ public class GraphicPack implements MouseListener {
 				pane.add((new GraphicCard(this, pack.get(i), 0, 25*i)).label, new Integer(i + 1));
 		}
     }
+
+    public void setActive(int i) {
+    	JLabel card = (JLabel) pane.getComponent(i);
+    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, 2));
+	}
 
 	/**
 	 * Handle click on card from this pack.
