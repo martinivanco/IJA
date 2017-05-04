@@ -1,7 +1,6 @@
 package klondike.model;
 
 import klondike.klondikeInterface.Card;
-import klondike.klondikeInterface.Pack;
 
 /**
  * A working deck. The next card should of different color (red/black)
@@ -9,56 +8,36 @@ import klondike.klondikeInterface.Pack;
  * @author xandri03
  */
 public class WorkingPack extends KlondikePack {
-	
-	/**
-	 * pop() override: if the card on top is faced down, flip it.
-	 */
-	@Override
-	public Card pop() {
-		Card card = super.pop();
-		if(!empty())
-			get().flip(true);
-		return card;
-	}
-	
-	/**
-	 * push() override.
-	 */
-	@Override
-	public boolean push(Card card) {
-		// Do checking only if card is turned face up
-		if (card.isFacedUp()) {
-			if(empty()) {
-				// Check if king
-				if(card.value() != 13)
-					return false;
-			}
-			else {
-				// Check the color
-				if(card.similarColorTo(get()))
-					return false;
-				// Check the value
-				if(get().value() != card.value()+1) {
-					return false;
-				}
-			}
-		}
-		
-		// The card is OK
-		return super.push(card);
-	}
 
-	/**
-	 * fromString() override.
-	 */
-	@Override
-	protected void fromString(String str) {
-		// Clear deck not needed
+    /**
+     * pop() override: the top card should always be faced up.
+     */
+    @Override
+    public Card pop() {
+        Card card = super.pop();
+        if(!empty())
+            get().flip(true);
+        return card;
+    }
 
-		Card card;
-		while((card = KlondikeCard.fromString(str)) != null) {
-			super.push(card);
-			str = str.substring(3, str.length());
-		}
-	}
+    /**
+     * check() override: check the suit and the value.
+     */
+    @Override
+    protected boolean check(Card card) {
+        // Always push faced down cards
+        if(!card.isFacedUp())
+            return true;
+
+        // King is expected for an empty pack
+        if(empty())
+            return card.value() == 13;
+            
+        // Always push ontop of a faced down card
+        if(!get().isFacedUp())
+            return true;
+
+        // Regular card ontop of a regular one: check color and value
+        return !card.similarColorTo(get()) && get().value() == card.value()+1;
+    }
 }

@@ -15,69 +15,70 @@ package klondike.klondikeInterface;
  * @author xivanc03
  */
 public interface Card {
-	/**
-	 * Card color enumerator.
-	 */
-	public static enum Color {
-		SPADES ('S'), DIAMONDS ('D'), CLUBS ('C'), HEARTS ('H');
-	
-		/**
-		 * String representation of a color.
-		 */
-		private char symbol;
-		
-		/**
-		 * Default constructor.
-		 */
-		Color(char symbol) {
-			this.symbol = symbol;
-		}
-		
-		/**
-		 * Check if {@code c} is of the same color (black or red).
-		 * @return true if suits are both red or both black.
-		 */
-		public boolean similarColorTo(Card.Color c) {
-			if(c == CLUBS || c == SPADES)
-				return this == CLUBS || this == SPADES;
-			else
-				return this == DIAMONDS || this == HEARTS;
-		}
-		
-		/**
-		 * toString() override: return text symbol instead of a value.
-		 */
-		@Override
-		public String toString() {
-			return Character.toString(symbol);
-		}
-	}
+    /**
+     * Card color enumerator.
+     */
+    public static enum Color {
+        SPADES ('S'), DIAMONDS ('D'), CLUBS ('C'), HEARTS ('H');
 
-	/**
-	 * Card color.
-	 */
-	public Card.Color color();
-	
-	/**
-	 * Test if {@code c} has the same color (black or red).
-	 * @return true if Cards are both red or both black.
-	 */
-	public boolean similarColorTo(Card c);
-	
-	/**
-	 * Card value.
-	 */
-	public int value();
-	
-	/**
-	 * Test if the card is faced up.
-	 * @return true if the card is faced up.
-	 */
-	public boolean isFacedUp();
-   
-	/**
-	 * Change the card orientation.
-	 * @param facedUp true for the card to be faced up.
-	 */
-    public void flip(boolean facedUp);
+        /**
+         * String representation of a color.
+         */
+        private final char symbol;
+
+        /**
+         * Default constructor.
+         */
+        Color(char symbol) {
+            this.symbol = symbol;
+        }
+
+        /**
+         * Check suit similarity.
+         * @param color The color to compare to.
+         * @return true if suits are both red or both black.
+         */
+        public boolean similarColorTo(Card.Color color) {
+            if(color == CLUBS || color == SPADES)
+                return this == CLUBS || this == SPADES;
+            else
+                return this == DIAMONDS || this == HEARTS;
+        }
+
+        /**
+         * toString() override: return text symbol instead of a value.
+         */
+        @Override
+        public String toString() {
+            return Character.toString(symbol);
+        }
+    }
+
+    /**
+     * Card color.
+     */
+    public Card.Color color();
+
+    /**
+     * Test {@code card} is of the same suit.
+     * @return true if Cards are both red or both black.
+     */
+    public boolean similarColorTo(Card card);
+
+    /**
+     * Card value.
+     */
+    public int value();
+
+    /**
+     * Test if the card is faced up.
+     * @return true if the card is faced up.
+     */
+    public boolean isFacedUp();
+
+    /**
+     * Change the card orientation.
+     * @param isfacedUp true for the card to be faced up.
+     */
+    public void flip(boolean isfacedUp);
 }

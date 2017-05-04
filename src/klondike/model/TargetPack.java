@@ -1,7 +1,6 @@
 package klondike.model;
 
 import klondike.klondikeInterface.Card;
-import klondike.klondikeInterface.Pack;
 
 /**
  * A target deck. All cards here are faced up and of specified suit. The
@@ -10,37 +9,33 @@ import klondike.klondikeInterface.Pack;
  * @author xandri03
  */
 public class TargetPack extends KlondikePack {
-	/**
-	 * Pack suit.
-	 */
-	private Card.Color color;
-	
-	/**
-	 * Default constructor.
-	 */
-	public TargetPack(Card.Color color) {
-		this.color = color;
-	}
-	
-	/**
-	 * push() override.
-	 */
-	@Override
-	public boolean push(Card card) {
-		// Check the suit
-		if(color != card.color())
-			return false;
-		
-		// Check the value
-		if(empty()) {
-			if(card.value() != 1)
-				return false;
-		}
-		else if(get().value()+1 != card.value()) {
-			return false;
-		}
-		
-		// Card is OK
-		return super.push(card);
-	}
+    /**
+     * Pack suit.
+     */
+    private final Card.Color color;
+
+    /**
+     * Default constructor.
+     * @param color A suit of all cards in a pack.
+     */
+    public TargetPack(Card.Color color) {
+        this.color = color;
+    }
+
+    /**
+     * check() override: check color and a value of incoming card.
+     */
+    @Override
+    protected boolean check(Card card) {
+        // Check the suit and orientation
+        if(!card.isFacedUp() || card.color() != color)
+            return false;
+
+        // Ace is allowed here for an empty pack
+        if(empty())  
+            return card.value() == 1;
+        
+        // Some card goes on top of another one: check the value
+        return get().value()+1 == card.value();
+    }
 }
