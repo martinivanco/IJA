@@ -5,8 +5,7 @@ import klondike.klondikeInterface.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * Graphical representation of Board.
@@ -15,20 +14,18 @@ import java.awt.event.MouseListener;
  * @author xivanc03
  */
 public class GraphicBoard implements MouseListener {
-	// Graphic variables
 	GraphicMain manager;
     JLayeredPane pane;
     double size;
 
-    // Logic variables
     KlondikeBoard board;
-    GraphicPack deck;
-    GraphicPack source;
-    GraphicPack[] targetPacks;
-    GraphicPack[] workingPacks;
+    private GraphicPack deck;
+    private GraphicPack source;
+    private GraphicPack[] targetPacks;
+    private GraphicPack[] workingPacks;
 
 	/**
-	 * Default constructor.
+	 * Constructor.
 	 * @param m the parent main window
 	 * @param load the name of the save file to load from. If null, a new board is created.
 	 * @param q the size quotient of board
@@ -61,29 +58,6 @@ public class GraphicBoard implements MouseListener {
 		background.addMouseListener(this);
         pane.add(background, new Integer(0));
     }
-
-	/**
-	 * Highlight active card.
-	 */
-	private void setActive() {
-		int i;
-		// Determine correct pack and call it
-		switch (board.getActivePack().charAt(0)) {
-			case 'S':
-				source.setActive(0, size);
-				break;
-			case 'T':
-				i = Character.getNumericValue(board.getActivePack().charAt(1));
-				targetPacks[i].setActive(targetPacks[i].pack.size() - board.getActiveCard() - 1, size);
-				break;
-			case 'W':
-				i = Character.getNumericValue(board.getActivePack().charAt(1));
-				workingPacks[i].setActive(workingPacks[i].pack.size() - board.getActiveCard() - 1, size);
-				break;
-			default:
-				break;
-		}
-	}
 
 	/**
 	 * Add packs to the board pane.
@@ -149,6 +123,9 @@ public class GraphicBoard implements MouseListener {
     		board.clickCard(card.card, pack.pack);
 
     	redrawPacks();
+
+    	if (board.isFinished())
+			JOptionPane.showMessageDialog(pane, "You have won the game!\nThank you for playing!", "Congratulations!", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	/**
@@ -178,18 +155,27 @@ public class GraphicBoard implements MouseListener {
 		redrawPacks();
 	}
 
+	/**
+	 * Find graphic pack corresponding to logic pack.
+	 * @param pack logic model pack
+	 * @return corresponding graphic pack
+	 */
 	private GraphicPack findGraphicPack(Pack pack) {
+		// Check deck
 		if (deck.pack == pack)
 			return deck;
 
+		// Check source pack
 		if (source.pack == pack)
 			return source;
 
+		// Check target packs
 		for (int i = 0; i < 4; i++) {
 			if (targetPacks[i].pack == pack)
 				return targetPacks[i];
 		}
 
+		// Check working packs
 		for (int i = 0; i < 7; i++) {
 			if (workingPacks[i].pack == pack)
 				return workingPacks[i];
@@ -199,13 +185,28 @@ public class GraphicBoard implements MouseListener {
 	}
 
 	/**
+	 * Highlight active card.
+	 */
+	private void setActive() {
+		// Get active pack and index of active card in it
+		GraphicPack active = findGraphicPack(board.getActivePack());
+		if (active != null)
+			active.setActive(active.pack.size() - active.pack.indexOf(board.getActiveCard()) - 1, size);
+	}
+
+	/**
 	 * Show a hint of possible moves.
 	 */
 	public void hint() {
+		// Remove possible last highlight
 		redrawPacks();
+
+		// Get hint
 		Hint h = board.hint();
 		GraphicPack src = findGraphicPack(h.source);
 		GraphicPack dst = findGraphicPack(h.target);
+
+		// Highlight
 		src.showHint(h.source.size() - h.source.indexOf(h.card) - 1, size);
 		dst.showHint(0, size);
 	}

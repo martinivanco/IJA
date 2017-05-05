@@ -23,8 +23,8 @@ public class GraphicMain implements ActionListener {
 	private GraphicBoard[] boards;
 	private int numOfBoards;
 	// Images
-	ImageIcon[] highres;
-	ImageIcon[] lowres;
+	private ImageIcon[] highres;
+	private ImageIcon[] lowres;
 
 	/**
 	 * Constructor.
@@ -60,34 +60,31 @@ public class GraphicMain implements ActionListener {
 
     	// Create menu for open boards
 		int i;
-		for (i = 1; i <= numOfBoards; i++) {
-			// Create menu and add it to menu bar
-			JMenu menu = new JMenu("Board " + i);
-			menuBar.add(menu);
-
-			// Create menu items
-			String[] titles = {"New", "Save", "Load", "Undo", "Hint", "Close"};
-			for (String s: titles) {
-				JMenuItem menuItem = new JMenuItem(s);
-				menuItem.addActionListener(this);
-				menuItem.setActionCommand(s + i);
-				menu.add(menuItem);
-			}
-		}
+		for (i = 1; i <= numOfBoards; i++)
+			createMenu(menuBar, i, new String[] {"New", "Save", "Load", "Undo", "Hint", "Close"});
 
 		//Create menu for possible new board
-		if (numOfBoards < 4) {
-			JMenu menu = new JMenu("Board " + i);
-			menuBar.add(menu);
+		if (numOfBoards < 4)
+			createMenu(menuBar, i, new String[] {"New", "Load"});
+	}
 
-			//Create menu items
-			String[] titles = {"New", "Load"};
-			for (String s: titles) {
-				JMenuItem menuItem = new JMenuItem(s);
-				menuItem.addActionListener(this);
-				menuItem.setActionCommand(s + i);
-				menu.add(menuItem);
-			}
+	/**
+	 * Create menu.
+	 * @param bar menu bar to add new menu to
+	 * @param n number of board corresponding to new menu
+	 * @param options menu options to assign
+	 */
+	private void createMenu(JMenuBar bar, int n, String[] options) {
+    	// Create and add menu to menu bar
+    	JMenu menu = new JMenu("Board " + n);
+    	bar.add(menu);
+
+    	// Create and add menu items to menu
+		for (String s: options) {
+			JMenuItem menuItem = new JMenuItem(s);
+			menuItem.addActionListener(this);
+			menuItem.setActionCommand(s + n);
+			menu.add(menuItem);
 		}
 	}
 

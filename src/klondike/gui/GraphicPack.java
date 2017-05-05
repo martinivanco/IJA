@@ -22,7 +22,6 @@ public class GraphicPack implements MouseListener {
 	JLayeredPane pane;
     Pack pack;
 
-
 	/**
 	 * Constructor.
 	 * @param b parent graphic board
@@ -40,15 +39,15 @@ public class GraphicPack implements MouseListener {
 
 		// All cards are on top of each other
         if (stacked) {
-        	pane.setBounds((int)(x*q), (int)(y*q), (int)(CARD_WIDTH*q), (int)(CARD_HEIGHT*q));
+        	pane.setBounds((int)(x * q), (int)(y * q), (int)(CARD_WIDTH * q), (int)(CARD_HEIGHT * q));
 			for (int i = 0; i < pack.size(); i++)
 				pane.add((new GraphicCard(this, pack.get(i), 0, 0, q)).label, new Integer(i + 1));
 		}
 		// The cards are just partly overlapping (working packs)
         else {
-			pane.setBounds((int)(x*q), (int)(y*q), (int)(CARD_WIDTH*q), (int)((25*(p.size() - 1) + CARD_HEIGHT)*q));
+			pane.setBounds((int)(x * q), (int)(y * q), (int)(CARD_WIDTH * q), (int)((25 * (p.size() - 1) + CARD_HEIGHT) * q));
 			for (int i = 0; i < pack.size(); i++)
-				pane.add((new GraphicCard(this, pack.get(i), 0, (int)(25*i*q), q)).label, new Integer(i + 1));
+				pane.add((new GraphicCard(this, pack.get(i), 0, (int)(25 * i * q), q)).label, new Integer(i + 1));
 		}
     }
 
@@ -59,13 +58,13 @@ public class GraphicPack implements MouseListener {
 	 */
 	public void setActive(int i, double q) {
     	JLabel card = (JLabel) pane.getComponent(i);
-    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, (int)(2*q)));
+    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, (int)(2 * q)));
 	}
 
 	public void showHint(int i, double q) {
 		JLabel card = (JLabel) pane.getComponent(i);
 		Border b = card.getBorder();
-		card.setBorder(BorderFactory.createLineBorder(Color.blue, (int)(2*q)));
+		card.setBorder(BorderFactory.createLineBorder(Color.blue, (int)(2 * q)));
 	}
 
 	/**

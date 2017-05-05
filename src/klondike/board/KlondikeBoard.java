@@ -168,30 +168,19 @@ public class KlondikeBoard {
     }
     
     /**
-     * Read active pack.
-     * @return String representation of a type of an active pack or "null" if
-     * the model is inactive.
+     * Get active pack.
+     * @return active pack
      */
-    public String getActivePack() {
-        if (activePack == sourcePack)
-            return "S";
-
-        for (int i = 0; i < targetPacks.length; i++)
-            if (activePack == targetPacks[i])
-                return "T" + i;
-
-        for (int i = 0; i < workingPacks.length; i++)
-            if (activePack == workingPacks[i])
-                return "W" + i;
-
-        return "null";
+    public Pack getActivePack() {
+        return activePack;
     }
 
     /**
-     * Get the index of an active card in its pack (starting from 0).
+     * Get active card.
+     * @return active card
      */
-    public int getActiveCard() {
-        return activePack.indexOf(activeCard);
+    public Card getActiveCard() {
+        return activeCard;
     }
 
     /**
@@ -351,7 +340,7 @@ public class KlondikeBoard {
      */
     public boolean isFinished() {
         for(Pack pack: targetPacks) {
-            if(pack.get().value() != 13)
+            if((pack.get() == null) || (pack.get().value() != 13))
                 return false;
         }
         
