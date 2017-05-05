@@ -3,6 +3,7 @@ package klondike.gui;
 import klondike.klondikeInterface.Pack;
 
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -13,12 +14,14 @@ import java.awt.event.*;
  * @author xivanc03
  */
 public class GraphicPack implements MouseListener {
+	// Constants
     private static final int CARD_WIDTH = 68;
     private static final int CARD_HEIGHT = 97;
 
     GraphicBoard board;
-    Pack pack;
 	JLayeredPane pane;
+    Pack pack;
+
 
 	/**
 	 * Constructor.
@@ -26,9 +29,10 @@ public class GraphicPack implements MouseListener {
 	 * @param p standard representation of pack
 	 * @param x x coordinate position
 	 * @param y y coordinate position
+	 * @param q size quotient
 	 * @param stacked pack is stacked
 	 */
-    public GraphicPack(GraphicBoard b, Pack p, int x, int y, boolean stacked) {
+    public GraphicPack(GraphicBoard b, Pack p, int x, int y, double q, boolean stacked) {
     	board = b;
         pack = p;
         pane = new JLayeredPane();
@@ -36,21 +40,32 @@ public class GraphicPack implements MouseListener {
 
 		// All cards are on top of each other
         if (stacked) {
-        	pane.setBounds(x, y, CARD_WIDTH, CARD_HEIGHT);
+        	pane.setBounds((int)(x*q), (int)(y*q), (int)(CARD_WIDTH*q), (int)(CARD_HEIGHT*q));
 			for (int i = 0; i < pack.size(); i++)
-				pane.add((new GraphicCard(this, pack.get(i), 0, 0)).label, new Integer(i + 1));
+				pane.add((new GraphicCard(this, pack.get(i), 0, 0, q)).label, new Integer(i + 1));
 		}
 		// The cards are just partly overlapping (working packs)
         else {
-			pane.setBounds(x, y, CARD_WIDTH, 25*(p.size() - 1) + CARD_HEIGHT);
+			pane.setBounds((int)(x*q), (int)(y*q), (int)(CARD_WIDTH*q), (int)((25*(p.size() - 1) + CARD_HEIGHT)*q));
 			for (int i = 0; i < pack.size(); i++)
-				pane.add((new GraphicCard(this, pack.get(i), 0, 25*i)).label, new Integer(i + 1));
+				pane.add((new GraphicCard(this, pack.get(i), 0, (int)(25*i*q), q)).label, new Integer(i + 1));
 		}
     }
 
-    public void setActive(int i) {
+	/**
+	 * Highlight active card.
+	 * @param i index of card in pane
+	 * @param q size quotient for width of border
+	 */
+	public void setActive(int i, double q) {
     	JLabel card = (JLabel) pane.getComponent(i);
-    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, 2));
+    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, (int)(2*q)));
+	}
+
+	public void showHint(int i, double q) {
+		JLabel card = (JLabel) pane.getComponent(i);
+		Border b = card.getBorder();
+		card.setBorder(BorderFactory.createLineBorder(Color.blue, (int)(2*q)));
 	}
 
 	/**

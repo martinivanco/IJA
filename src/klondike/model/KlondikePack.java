@@ -57,7 +57,7 @@ public class KlondikePack implements Pack {
     public int indexOf(Card card) {
         // Scan through the pack
         for(int i = 0; i < size(); i++) {
-            if(get(i) == card)
+            if(get(i).equals(card))
                 return i;
         }
         

@@ -3,7 +3,6 @@ package klondike.gui;
 import klondike.klondikeInterface.Card;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -14,8 +13,8 @@ import java.awt.event.*;
  */
 public class GraphicCard implements MouseListener {
 	GraphicPack pack;
-    Card card;
 	JLabel label;
+    Card card;
 
 	/**
 	 * Constructor.
@@ -23,8 +22,9 @@ public class GraphicCard implements MouseListener {
 	 * @param c standard representation of card
 	 * @param x x coordinate position
 	 * @param y y coordinate position
+	 * @param q size quotient
 	 */
-    public GraphicCard(GraphicPack p, Card c, int x, int y) {
+    public GraphicCard(GraphicPack p, Card c, int x, int y, double q) {
     	pack = p;
         card = c;
         label = new JLabel("");
@@ -33,9 +33,9 @@ public class GraphicCard implements MouseListener {
         // Set image according to face
 		ImageIcon image;
 		if (card.isFacedUp())
-			image = new ImageIcon("images/" + card.color() + "/" + card.value() + ".png");
+			image = pack.board.manager.getIcon(card, q);
 		else
-			image = new ImageIcon("images/back.png");
+			image = pack.board.manager.getCardBack(q);
 
 		label.setIcon(image);
 		label.setBounds(x, y, image.getIconWidth(), image.getIconHeight());

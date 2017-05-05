@@ -309,7 +309,7 @@ public class KlondikeBoard {
     /**
      * Load board configuration from {@code str}.
      * Each pack is constructed separately.
-     * @param string A string representing all packs on board
+     * @param str A string representing all packs on board
      */
     public void fromString(String str) {
         // Check input string
