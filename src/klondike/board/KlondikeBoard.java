@@ -307,44 +307,11 @@ public class KlondikeBoard {
     }
 
     /**
-     * Check if the game is finished, that is, all 4 kings are at target packs.
-     */
-    public boolean isFinished() {
-        for(Pack pack: targetPacks) {
-            if(pack.get().value() != 13)
-                return false;
-        }
-        
-        return true;
-    }
-            
-    //******************************************************************
-    // Auxiliary
-    
-    /**
-     * Autosave function for undo. The board specification is stored via its
-     * string representation in a stack. 20 of such saves are stored.
-     */
-    protected void autosave() {
-        autosaves.push(toString());
-        if(autosaves.size() > 20)
-            autosaves.removeElementAt(0);
-    }
-
-    /**
-     * Update hints.
-     */
-    protected void updateHints() {
-        hints.clear();
-        hintPtr = 0;
-    }
-    
-    /**
      * Load board configuration from {@code str}.
      * Each pack is constructed separately.
      * @param string A string representing all packs on board
      */
-    protected void fromString(String str) {
+    public void fromString(String str) {
         // Check input string
         if(str == null)
             return;
@@ -376,6 +343,80 @@ public class KlondikeBoard {
         catch (IOException e) {
             // TODO -> GUI MESSAGE
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Check if the game is finished, that is, all 4 kings are at target packs.
+     */
+    public boolean isFinished() {
+        for(Pack pack: targetPacks) {
+            if(pack.get().value() != 13)
+                return false;
+        }
+        
+        return true;
+    }
+            
+    //******************************************************************
+    // Auxiliary
+    
+    /**
+     * Autosave function for undo. The board specification is stored via its
+     * string representation in a stack. 20 of such saves are stored.
+     */
+    protected void autosave() {
+        autosaves.push(toString());
+        if(autosaves.size() > 20)
+            autosaves.removeElementAt(0);
+    }
+
+    /**
+     * Update hints buffer.
+     */
+    protected void updateHints() {
+        // Clear hints
+        hints.clear();
+        hintPtr = 0;
+        
+        // Try to move a card from the source
+        for(Pack target: targetPacks) {
+            if(target.check(sourcePack, sourcePack.get()))
+                hints.add(new Hint(sourcePack, sourcePack.get(), target));
+        }
+        for(Pack target: workingPacks) {
+            if(target.check(sourcePack, sourcePack.get()))
+                hints.add(new Hint(sourcePack, sourcePack.get(), target));
+        }
+        
+        // Try to move a sequence of cards from the working pack
+        for(Pack source: workingPacks) {
+            for(int i = source.size()-1; i >= 0; i--) {
+                // Cannot move a faced down card
+                Card card = source.get(i);
+                if(!card.isFacedUp())
+                    break;
+                
+                // Try target packs
+                for(Pack target: targetPacks) {
+                    if(target.check(source, card))
+                        hints.add(new Hint(source, card, target));
+                }
+                
+                // Try other working packs
+                for(Pack target: workingPacks) {
+                    if(target.check(source, card))
+                        hints.add(new Hint(source, card, target));
+                }
+            }
+        }
+        
+        // Finally, try to move a card from a target pack
+        for(Pack source: targetPacks) {
+            for(Pack target: workingPacks) {
+                if(target.check(source, source.get()))
+                    hints.add(new Hint(source, source.get(), target));
+            }
         }
     }
 
