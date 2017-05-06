@@ -97,18 +97,18 @@ public class GraphicMain implements ActionListener {
 		lowres = new ImageIcon[54];
 
 		// Get background
-		highres[0] = new ImageIcon("images/board.png");
+		highres[0] = new ImageIcon("lib/board.png");
 		lowres[0] = new ImageIcon(highres[0].getImage().getScaledInstance(300, 300, Image.SCALE_DEFAULT));
 
 		// Get card back
-		highres[1] = new ImageIcon("images/back.png");
+		highres[1] = new ImageIcon("lib/back.png");
 		lowres[1] = new ImageIcon(highres[1].getImage().getScaledInstance(LRI_WIDTH, LRI_HEIGHT, Image.SCALE_DEFAULT));
 
 		// Get cards faces
 		int c = 1;
 		for (Card.Color color: Card.Color.values()) {
 			for (int i = 1; i <= 13; i++) {
-				highres[c + i] = new ImageIcon("images/" + color + "/" + i + ".png");
+				highres[c + i] = new ImageIcon("lib/" + color + "/" + i + ".png");
 				lowres[c + i] = new ImageIcon(highres[c + i].getImage().getScaledInstance(LRI_WIDTH, LRI_HEIGHT, Image.SCALE_SMOOTH));
 			}
 			c += 13;
