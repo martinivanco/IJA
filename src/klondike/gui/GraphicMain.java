@@ -9,7 +9,6 @@ import java.awt.event.*;
 /**
  * Main GUI implementation.
  *
- * @author xandri03
  * @author xivanc03
  */
 public class GraphicMain implements ActionListener {

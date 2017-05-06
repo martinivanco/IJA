@@ -10,7 +10,6 @@ import java.awt.event.*;
 /**
  * Graphical representation of Pack.
  *
- * @author xandri03
  * @author xivanc03
  */
 public class GraphicPack implements MouseListener {

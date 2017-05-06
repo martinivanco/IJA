@@ -10,7 +10,6 @@ import java.awt.event.*;
 /**
  * Graphical representation of Board.
  *
- * @author xandri03
  * @author xivanc03
  */
 public class GraphicBoard implements MouseListener {

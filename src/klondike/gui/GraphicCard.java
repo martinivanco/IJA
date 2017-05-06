@@ -8,7 +8,6 @@ import java.awt.event.*;
 /**
  * Graphical representation of Card.
  *
- * @author xandri03
  * @author xivanc03
  */
 public class GraphicCard implements MouseListener {
