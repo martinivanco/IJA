@@ -2,16 +2,17 @@
 	IJA Project
 	build.xml
 	author: xandri03
+	author: xivanc03
 -->
 
 <project name="IJA-Project" default="main">
 	<property name="src.dir" value="src"/>
 	
 	<property name="build.dir" value="build"/>
-	<property name="classes.dir" value="${build.dir}/cls"/>
-	<property name="jar.dir" value="${build.dir}/jar"/>
+	<property name="doc.dir" value="doc"/>
+	<property name="jar.dir" value="dest-client"/>
 	
-	<property name="main-class" value="klondike.board.KlondikeBoard"/>
+	<property name="main-class" value="klondike.gui.GraphicMain"/>
 	
 	<property name="archive-name" value="xandri03.zip"/>
 	
@@ -21,16 +22,20 @@
 		<fileset dir="${lib.dir}" includes="**/*.jar"/>
 	</path>
 	
-	<!-- Compile -->
-	<target name="compile">
-		<mkdir dir="${classes.dir}"/>
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+	<!-- Build classes -->
+	<target name="build">
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false"/>
 	</target>
 
-	<!-- Create .jar -->
-	<target name="jar" depends="compile">
-		<mkdir dir="${jar.dir}"/>
-		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+	<!-- Generate documentation -->
+	<target name="doc">
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}"/>
+	</target>
+
+	<!-- Compile, create .jar -->
+	<target name="compile" depends="build,doc">
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${build.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}"/>
 			</manifest>
@@ -38,7 +43,7 @@
 	</target>
 	
 	<!-- Execute -->
-	<target name="run" depends="jar">
+	<target name="run" depends="compile">
 		<java fork="true" classname="${main-class}">
 			<classpath>
 				<path refid="classpath"/>
