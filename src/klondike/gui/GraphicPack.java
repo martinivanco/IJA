@@ -44,7 +44,8 @@ public class GraphicPack implements MouseListener {
 		}
 		// The cards are just partly overlapping (working packs)
         else {
-			pane.setBounds((int)(x * q), (int)(y * q), (int)(CARD_WIDTH * q), (int)((25 * (p.size() - 1) + CARD_HEIGHT) * q));
+        	int margin = (p.size() == 0) ? 0 : 25 * (p.size() - 1);
+			pane.setBounds((int)(x * q), (int)(y * q), (int)(CARD_WIDTH * q), (int)((margin + CARD_HEIGHT) * q));
 			for (int i = 0; i < pack.size(); i++)
 				pane.add((new GraphicCard(this, pack.get(i), 0, (int)(25 * i * q), q)).label, new Integer(i + 1));
 		}
@@ -53,17 +54,42 @@ public class GraphicPack implements MouseListener {
 	/**
 	 * Highlight active card.
 	 * @param i index of card in pane
-	 * @param q size quotient for width of border
+	 * @param q size quotient for width of highlighting border
 	 */
 	public void setActive(int i, double q) {
+		// Create highlight
+		JLabel highlight = new JLabel();
+		highlight.setIcon(board.manager.getHighlight(Color.red, q));
+
+		// Position it
     	JLabel card = (JLabel) pane.getComponent(i);
-    	card.setBorder(BorderFactory.createLineBorder(Color.yellow, (int)(2 * q)));
+		highlight.setBounds(card.getX(), card.getY(), (int)(CARD_WIDTH * q), (int)(CARD_HEIGHT * q));
+
+		// Show it
+		pane.add(highlight, new Integer(pack.size() - i + 1));
 	}
 
+	/**
+	 * Highlight hinted card.
+	 * @param i index of card in pane
+	 * @param q size quotient for size of highlighting border
+	 */
 	public void showHint(int i, double q) {
-		JLabel card = (JLabel) pane.getComponent(i);
-		Border b = card.getBorder();
-		card.setBorder(BorderFactory.createLineBorder(Color.blue, (int)(2 * q)));
+		// Create highlight
+		JLabel highlight = new JLabel();
+		highlight.setIcon(board.manager.getHighlight(Color.blue, q));
+
+		// Position it
+		if (pack.size() != 0) {
+			JLabel card = (JLabel) pane.getComponent(i);
+			highlight.setBounds(card.getX(), card.getY(), (int)(CARD_WIDTH * q), (int)(CARD_HEIGHT * q));
+		}
+		else {
+			highlight.setBounds(0, 0, (int)(CARD_WIDTH * q), (int)(CARD_HEIGHT * q));
+		}
+
+		// Show it
+		pane.add(highlight, new Integer(pack.size() - i + 1));
 	}
 
 	/**

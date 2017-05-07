@@ -92,8 +92,8 @@ public class GraphicMain implements ActionListener {
 	 */
 	private void loadIcons() {
 		// Create the arrays
-		highres = new ImageIcon[54];
-		lowres = new ImageIcon[54];
+		highres = new ImageIcon[56];
+		lowres = new ImageIcon[56];
 
 		// Get background
 		highres[0] = new ImageIcon("lib/board.png");
@@ -112,6 +112,14 @@ public class GraphicMain implements ActionListener {
 			}
 			c += 13;
 		}
+
+		// Get active card highlight
+		highres[54] = new ImageIcon("lib/active.png");
+		lowres[54] = new ImageIcon(highres[54].getImage().getScaledInstance(LRI_WIDTH, LRI_HEIGHT, Image.SCALE_DEFAULT));
+
+		// Get hint card highlight
+		highres[55] = new ImageIcon("lib/hint.png");
+		lowres[55] = new ImageIcon(highres[55].getImage().getScaledInstance(LRI_WIDTH, LRI_HEIGHT, Image.SCALE_DEFAULT));
 	}
 
 	/**
@@ -169,6 +177,22 @@ public class GraphicMain implements ActionListener {
 		i += card.value();
 
 		// Return right resolution
+		if (size == 1) {
+			return highres[i];
+		}
+		else {
+			return lowres[i];
+		}
+	}
+
+	/**
+	 * Get icon of highlight frame.
+	 * @param c the color of which the frame should be. Only Color.red and Color.blue supported
+	 * @param size size quotient used to determine the resolution to be used
+	 * @return icon of the given card
+	 */
+	public ImageIcon getHighlight(Color c, double size) {
+		int i = (c == Color.red) ? 54 : 55;
 		if (size == 1) {
 			return highres[i];
 		}
