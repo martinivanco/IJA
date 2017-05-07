@@ -75,9 +75,8 @@ public class KlondikeBoard {
      * Create a new game.
      */
     public void newGame() {
-        // Clear autosaves & hints
+        // Clear autosaves
         autosaves.clear();
-        hints.clear();
         
         // Create factory, deck and source pack
         PackFactory factory = new KlondikePackFactory();
@@ -101,6 +100,7 @@ public class KlondikeBoard {
         }
 
         resetActivity();
+        updateHints();
     }
     
     /**
@@ -108,9 +108,11 @@ public class KlondikeBoard {
      * All necessary actions are carried out.
      */
     public void clickCard(Card card, Pack pack) {
+        // Save the board state
+        String before = toString();
+
         // Check if the deck was clicked
         if (pack == deck) {
-            autosave();
             
             // Reset activity
             activeCard = null;
@@ -133,7 +135,6 @@ public class KlondikeBoard {
         if (activeCard != null) {
             // Move to working pack or target pack is allowed
             if(pack != sourcePack) {
-                autosave();
                 pack.move(activePack, activeCard);
                 updateHints();
             }
@@ -157,6 +158,10 @@ public class KlondikeBoard {
             activeCard = card;
             activePack = pack;
         }
+        
+        // Autosave if a change occured
+        if(toString() != before)
+            autosave();
     }
       
     /**
@@ -249,7 +254,7 @@ public class KlondikeBoard {
         // Load from string
         fromString(str.toString());
         autosaves.clear();
-        hints.clear();
+        updateHints();
     }
 
     /**
