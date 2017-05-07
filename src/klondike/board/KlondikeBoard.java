@@ -75,9 +75,6 @@ public class KlondikeBoard {
      * Create a new game.
      */
     public void newGame() {
-        // Clear autosaves
-        autosaves.clear();
-        
         // Create factory, deck and source pack
         PackFactory factory = new KlondikePackFactory();
         deck = factory.createDeck(null);
@@ -99,8 +96,11 @@ public class KlondikeBoard {
             workingPacks[i].get().flip(true);
         }
 
+        // Create initial state
         resetActivity();
         updateHints();
+        autosaves.clear();
+        autosave();
     }
     
     /**
@@ -126,41 +126,41 @@ public class KlondikeBoard {
                 while(!sourcePack.empty())
                     deck.move(sourcePack, sourcePack.get());
             }
-            
-            updateHints();
-            return;
-        }
-
-        // Regular pack: check activity
-        if (activeCard != null) {
-            // Move to working pack or target pack is allowed
-            if(pack != sourcePack) {
-                pack.move(activePack, activeCard);
-                updateHints();
-            }
-
-            resetActivity();
         }
         else {
-            // An empty pack may not be selected
-            if (card == null)
-                return;
-            
-            // A card that is faced down may not be selected
-            if(!card.isFacedUp())
-                return;
-            
-            // Only the top card from a source pack can be selected
-            if (pack == sourcePack && pack.get() != card)
-                return;
+            // Regular pack: check activity
+            if (activeCard != null) {
+                // Move to working pack or target pack is allowed
+                if(pack != sourcePack) {
+                    pack.move(activePack, activeCard);
+                    updateHints();
+                }
 
-            // Set activity
-            activeCard = card;
-            activePack = pack;
+                resetActivity();
+            }
+            else {
+                // An empty pack may not be selected
+                if (card == null)
+                    return;
+
+                // A card that is faced down may not be selected
+                if(!card.isFacedUp())
+                    return;
+
+                // Only the top card from a source pack can be selected
+                if (pack == sourcePack && pack.get() != card)
+                    return;
+
+                // Set activity
+                activeCard = card;
+                activePack = pack;
+            }
         }
         
-        // Autosave if a change occured
-        if(toString() != before)
+        
+        // hint & save if a change occured
+        updateHints();
+        if(before.equals(toString()))
             autosave();
     }
       
@@ -253,8 +253,12 @@ public class KlondikeBoard {
         
         // Load from string
         fromString(str.toString());
-        autosaves.clear();
+       
+        // Create initial state
+        resetActivity();
         updateHints();
+        autosaves.clear();
+        autosave();
     }
 
     /**
