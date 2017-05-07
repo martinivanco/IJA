@@ -8,9 +8,6 @@ import klondike.klondikeInterface.Card;
  */
 public class SourcePack extends KlondikePack {
     
-    /**
-     * push() override: incoming card is always faced up.
-     */
     @Override
     public void push(Card card) {
         card.flip(true);

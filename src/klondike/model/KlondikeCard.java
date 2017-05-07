@@ -123,6 +123,7 @@ public class KlondikeCard implements Card {
 
     /**
      * Create a card from its string representation.
+     * @param str A string to load from.
      * @return Created card or null if one could not be created.
      */
     protected static Card fromString(String str) {

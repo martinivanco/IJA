@@ -47,6 +47,7 @@ public interface Card {
 
         /**
          * toString() override: return text symbol instead of a value.
+         * @return String representation of a suit.
          */
         @Override
         public String toString() {
@@ -56,17 +57,20 @@ public interface Card {
 
     /**
      * Card color.
+     * @return A card suit.
      */
     public Card.Color color();
 
     /**
-     * Test {@code card} is of the same suit.
+     * Test the similarity of suits.
+     * @param card The card to compare the suit to.
      * @return true if Cards are both red or both black.
      */
     public boolean similarColorTo(Card card);
 
     /**
      * Card value.
+     * @return One of <1,13> according to card rules.
      */
     public int value();
 

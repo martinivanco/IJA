@@ -9,9 +9,6 @@ import klondike.klondikeInterface.Card;
  */
 public class WorkingPack extends KlondikePack {
 
-    /**
-     * pop() override: the top card should always be faced up.
-     */
     @Override
     public Card pop() {
         Card card = super.pop();
@@ -20,9 +17,6 @@ public class WorkingPack extends KlondikePack {
         return card;
     }
 
-    /**
-     * check() override: check the suit and the value.
-     */
     @Override
     protected boolean check(Card card) {
         // Always push faced down cards

@@ -12,9 +12,6 @@ import java.util.Collections;
  */
 public class Deck extends KlondikePack {
 
-    /**
-     * push() override: incoming cards are faced down.
-     */
     @Override
     public void push(Card card) {
         card.flip(false);

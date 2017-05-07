@@ -104,13 +104,13 @@ public class KlondikeBoard {
     }
     
     /**
-     * Click the {@code card} in a {@code pack}.
-     * All necessary actions are carried out.
+     * Click the card. All necessary actions are carried out.
+     * @param card The clicked card.
+     * @param pack The pack of a clicked card.
      */
     public void clickCard(Card card, Pack pack) {
-        // Save the board state
-        String before = toString();
-
+        boolean moved = false;  // true when a move was performed
+        
         // Check if the deck was clicked
         if (pack == deck) {
             
@@ -118,23 +118,23 @@ public class KlondikeBoard {
             activeCard = null;
             activePack = null;
 
-            // Move top card to the source pack or return some back
+            // Move top card to the source pack or return all back
             if(!deck.empty()) {
                 sourcePack.move(deck, deck.get());
             }
             else {
-                while(!sourcePack.empty())
+                while(!sourcePack.empty()) {
                     deck.move(sourcePack, sourcePack.get());
+                }
             }
+            moved = true;
         }
         else {
             // Regular pack: check activity
             if (activeCard != null) {
                 // Move to working pack or target pack is allowed
-                if(pack != sourcePack) {
-                    pack.move(activePack, activeCard);
-                    updateHints();
-                }
+                if(pack != sourcePack)
+                    moved = pack.move(activePack, activeCard);
 
                 resetActivity();
             }
@@ -157,11 +157,11 @@ public class KlondikeBoard {
             }
         }
         
-        
-        // hint & save if a change occured
-        updateHints();
-        if(before.equals(toString()))
+        // If a changed occured, update hints and save new state
+        if(moved) {
+            updateHints();
             autosave();
+        }
     }
       
     /**
@@ -198,8 +198,7 @@ public class KlondikeBoard {
     }
 
     /**
-     * Save current game.
-     * The game is saved in a text form.
+     * Save current game. The game is saved in a text form.
      * @param name filename of the saved game. The file will be: saved/{name}.sv
      */
     public void saveGame(String name) {
@@ -225,8 +224,8 @@ public class KlondikeBoard {
     }
 
     /**
-     * Load game.
-     * All packs are initialized appropriately.
+     * Load the game. All packs are initialized appropriately.
+     * @param name Filename to load from.
      */
     public void loadGame(String name) {
         // Read board specification
@@ -236,7 +235,7 @@ public class KlondikeBoard {
         try {
             // Get file to string
             reader = new FileReader(file);
-            int c = 0;
+            int c;
             while ((c = reader.read()) != -1) str.append((char) c);
 
             // Load packs
@@ -265,8 +264,9 @@ public class KlondikeBoard {
      * Undo last move. Maximum of 20 undo moves are available.
      */
     public void undo() {
+        autosaves.pop();
         if(!autosaves.empty())
-            fromString(autosaves.pop());
+            fromString(autosaves.peek());
     }
 
     /**
@@ -274,7 +274,7 @@ public class KlondikeBoard {
      * @return A valid move or null if none is possible.
      */
     public Hint hint() {
-        if(hints.size() == 0)
+        if(hints.isEmpty())
             return null;
         
         Hint h = hints.get(hintPtr);
@@ -346,6 +346,7 @@ public class KlondikeBoard {
     
     /**
      * Check if the game is finished, that is, all 4 kings are at target packs.
+     * @return True if all 4 kings
      */
     public boolean isFinished() {
         for(Pack pack: targetPacks) {

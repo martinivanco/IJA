@@ -40,7 +40,7 @@ public class KlondikePack implements Pack {
     
     @Override
     public boolean empty() {
-        return deck.size() == 0;
+        return deck.isEmpty();
     }
     
     @Override
@@ -109,10 +109,10 @@ public class KlondikePack implements Pack {
     }
     
     @Override
-    public void move(Pack source, Card card) {
+    public boolean move(Pack source, Card card) {
         // Check move validity
         if(!check(source, card))
-            return;
+            return false;
         
         // Copy from source
         int index = source.indexOf(card);
@@ -122,6 +122,9 @@ public class KlondikePack implements Pack {
         // Remove cards from the source
         while(source.size() > index)
             source.pop();
+        
+        // Success
+        return true;
     }
 
     @Override
@@ -136,7 +139,8 @@ public class KlondikePack implements Pack {
     // Auxiliary methods
 
     /**
-     * Check if the {@code card} may be pushed on top.
+     * Check if the card may be pushed on top.
+     * @param card Incoming card.
      */
     protected boolean check(Card card) {
         // Any card may be pushed on top
@@ -145,6 +149,7 @@ public class KlondikePack implements Pack {
 
     /**
      * Rebuild a pack from its string representation.
+     * @param str A string to load from.
      */
     protected void fromString(String str) {
         deck.clear();

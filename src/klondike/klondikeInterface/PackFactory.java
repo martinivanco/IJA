@@ -7,16 +7,18 @@ package klondike.klondikeInterface;
  */
 public abstract class PackFactory {
 	/**
-	 * Create a standard deck. All cards here are faced down.
+	 * Create a standard deck.
 	 * @param str A string to load pack from. If null, a standard
 	 * shuffled deck of 52 different cards is created.
+         * @return A deck with all the cards being faced down.
 	 */
 	public abstract Pack createDeck(String str);
 
 	/**
-	 * Create a source pack of cards. All cards here are faced up.
+	 * Create a source pack of cards.
 	 * @param str A string to load pack from. If null, an empty pack
 	 * is created.
+         * @return A source pack with all the cards being faced up.
 	 */
 	public abstract Pack createSourcePack(String str);
 
@@ -27,6 +29,7 @@ public abstract class PackFactory {
 	 * @param suit A color of all cards in the pack.
 	 * @param str A string to load pack from. If null, an empty pack
 	 * is created.
+         * @return A target pack.
 	 */
 	public abstract Pack createTargetPack(Card.Color suit, String str);
 	
@@ -36,6 +39,7 @@ public abstract class PackFactory {
 	 * starting card is the King (any suit).
 	 * @param str A string to load pack from. If null, an empty pack
 	 * is created.
+         * @return A working pack.
 	 */
 	public abstract Pack createWorkingPack(String str);
 }

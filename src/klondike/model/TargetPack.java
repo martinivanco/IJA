@@ -22,9 +22,6 @@ public class TargetPack extends KlondikePack {
         this.color = color;
     }
 
-    /**
-     * check() override: check color and a value of incoming card.
-     */
     @Override
     protected boolean check(Card card) {
         // Check the suit and orientation

@@ -11,11 +11,13 @@ package klondike.klondikeInterface;
  public interface Pack {
     /**
      * Size pack.
+     * @return An actual number of cards in a pack.
      */
     public int size();
 
     /**
      * Check if the pack is empty.
+     * @return True if there are no cards in a pack.
      */
     public boolean empty();
     
@@ -63,7 +65,8 @@ package klondike.klondikeInterface;
      * Move card sequence.
      * @param source A source pack.
      * @param card A source card.
+     * @return True if the move was successful.
      */
-    public void move(Pack source, Card card);
+    public boolean move(Pack source, Card card);
 }
 
