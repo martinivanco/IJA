@@ -141,6 +141,7 @@ public class KlondikePack implements Pack {
     /**
      * Check if the card may be pushed on top.
      * @param card Incoming card.
+     * @return True if the push is possible.
      */
     protected boolean check(Card card) {
         // Any card may be pushed on top

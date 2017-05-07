@@ -4,7 +4,7 @@ package klondike.klondikeInterface;
  * Single card interface.
  * 
  * String representation of such card is of the form 'SVF' where
- * - S is the suit (see {@see Card.Color.toString()});
+ * - S is the suit (see Card.Color.toString());
  * - V is the value with '0','J','Q','K','A' representing 10, Jack,
  * Queen, King and Ace respectively;
  * - F is 'U' when the card is faced up, 'D' otherwise.
@@ -70,7 +70,7 @@ public interface Card {
 
     /**
      * Card value.
-     * @return One of <1,13> according to card rules.
+     * @return One of [1,13] according to card rules.
      */
     public int value();
 

@@ -55,6 +55,8 @@
 	<!-- Clean up -->
 	<target name="clean">
 		<delete dir="${build.dir}"/>
+		<delete dir="${jar.dir}"/>
+		<delete dir="${doc.dir}"/>
 	</target>
 	
 	<!-- Archive -->

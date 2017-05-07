@@ -17,7 +17,7 @@ public class KlondikeCard implements Card {
     private final Card.Color color;
 
     /**
-     * Card value, one of <1,13>.
+     * Card value, one of [1,13].
      */
     private final int value;
 
@@ -32,7 +32,7 @@ public class KlondikeCard implements Card {
     /**
      * Card constructor. The card is faced down.
      * @param color Card color.
-     * @param value Card value, one of <1,13> (1 implicitly).
+     * @param value Card value, one of [1,13] (1 implicitly).
      */
     public KlondikeCard(Card.Color color, int value) {
         this(color, value, false);
@@ -41,7 +41,7 @@ public class KlondikeCard implements Card {
     /**
      * Card constructor.
      * @param color Card color.
-     * @param value Card value, one of <1,13> (1 implicitly).
+     * @param value Card value, one of [1,13] (1 implicitly).
      * @param facedUp Card orientation.
      */
     public KlondikeCard(Card.Color color, int value, boolean facedUp) {

@@ -3,7 +3,7 @@ package klondike.klondikeInterface;
 /**
  * Card pack interface.
  * 
- * String representation is a sequence of {@see Card.toString()}.
+ * String representation is a sequence of Card.toString().
  * 
  * @author xandri03
  * @author xivanc03
@@ -36,7 +36,7 @@ package klondike.klondikeInterface;
 
     /**
      * Find the card in this pack.
-     * @param card
+     * @param card A searched card.
      * @return An index of a {@code card} or -1 if one was not found.
      */
     public int indexOf(Card card);

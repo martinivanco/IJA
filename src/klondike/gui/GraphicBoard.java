@@ -202,10 +202,6 @@ public class GraphicBoard implements MouseListener {
 
 		// Get hint
 		Hint h = board.hint();
-		if (h == null)
-			return;
-
-		// Get packs
 		GraphicPack src = findGraphicPack(h.source);
 		GraphicPack dst = findGraphicPack(h.target);
 
