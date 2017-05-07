@@ -1,6 +1,6 @@
-IJA project: Klondike - a patience game.
+﻿IJA project: Klondike - a patience game.
 
-Authors: Martin Ivan�o (xivanc03), Roman Andriushchenko (xandri03).
+Authors: Martin Ivančo (xivanc03), Roman Andriushchenko (xandri03).
 
 Basic description and controls
 
