@@ -267,6 +267,7 @@ public class KlondikeBoard {
         autosaves.pop();
         if(!autosaves.empty())
             fromString(autosaves.peek());
+	updateHints();
     }
 
     /**
